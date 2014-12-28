@@ -1,4 +1,7 @@
 site_name: Snail
+repo_url: https://github.com/sjzabel/snail
+site_description: Documentation for the snail project
+site_author: Stephen J. Zabel
 pages:
   - [index.md, Home]
   - [about.md, About]
