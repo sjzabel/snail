@@ -1,0 +1,8 @@
+site_name: Snail
+pages:
+  - [index.md, Home]
+  - [about.md, About]
+  - [LICENSE.md, License]
+  - [why-snail.md, "Why Snail?"]
+  - [mkdocs.md, "mkdocs help"]
+theme: readthedocs
