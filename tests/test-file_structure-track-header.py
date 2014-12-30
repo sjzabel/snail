@@ -39,5 +39,5 @@ class TestFileStructureTrackHeader(unittest.TestCase):
         ]
         infile = io.BytesIO(b''.join(byte_li))
 
-        infile, track_len = file_structure.parse_track_header(infile)
+        infile, header_len = file_structure.parse_track_header(infile)
         self.assertEqual(header_len, 4294967295)
