@@ -41,3 +41,9 @@ class TestFileStructureTrackHeader(unittest.TestCase):
 
         infile, header_len = file_structure.parse_track_header(infile)
         self.assertEqual(header_len, 4294967295)
+
+    def test_build_track_header_correctly(self):
+        infile = io.BytesIO(file_structure.build_track_header(4294967295))
+
+        infile, header_len = file_structure.parse_track_header(infile)
+        self.assertEqual(header_len, 4294967295)

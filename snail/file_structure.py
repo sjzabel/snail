@@ -133,3 +133,12 @@ def parse_track_header(infile):
         raise ex
 
     return infile, track_len
+
+def build_track_header(track_len):
+    '''
+    track_len: in bytes, in addition to the 4 for the declaration and the 4 for this number
+
+    returns:
+      a byte array 8 bytes long
+    '''
+    return b''.join([b'MTrk', struct.pack('>L', track_len)])
