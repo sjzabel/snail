@@ -21,7 +21,6 @@ def parse_file_header(infile):
       - track_count: the number of tracks specified by the header
       - resolution: the PPQN http://en.wikipedia.org/wiki/Pulses_per_quarter_note
     '''
-
     try:
         # First four bytes are MIDI header declaration
         midi_header_declaration = infile.read(4)
@@ -66,55 +65,47 @@ def parse_file_header(infile):
     return infile, header_len, midi_format, track_ct, resolution
 
 
-def build_file_header(outfile, midi_format, track_ct, resolution):
+def build_file_header(midi_format, track_ct, resolution):
     '''
     build_file_header
     params:
-      - outfile: a file like object
       - midi_format: the midi format (0, 1 or 2) http://en.wikipedia.org/wiki/MIDI#Standard_MIDI_files
       - track_count: the number of tracks specified by the header
       - resolution: the PPQN http://en.wikipedia.org/wiki/Pulses_per_quarter_note
 
     returns:
-      - outfile: a file like object pointed at the first byte after the header
+      - a byte array len 14
     '''
-
     try:
+        rslt_li = []
         # First four bytes are MIDI header declaration
-        outfile.write(b'MThd')
+        rslt_li.append(b'MThd')
 
         # next four bytes are header size in bytes
         #  a len of 6 more bytes is standard
-        outfile.write(
-            struct.pack(">L", 6)
-        )
+        rslt_li.append(struct.pack(">L", 6))
 
         # next two bytes specify the format version
         if midi_format not in (0, 1, 2):
-            err_text = "{} is not a valid midi format - only (0, 1 or 2)"
+            err_text = "{} is not a valid midi format - only (0, 1 or 2)".format(midi_format)
             log.critical(err_text)
             raise TypeError(err_text)
 
-        outfile.write(
-            struct.pack(">H", midi_format)
-        )
+        rslt_li.append(struct.pack(">H", midi_format))
 
         # next two bytes specify the number of tracks
-        outfile.write(
-            struct.pack(">H", track_ct)
-        )
+        rslt_li.append(struct.pack(">H", track_ct))
 
         # next two bytes specify the resolution/PPQ/Parts Per Quarter
         # (in other words, how many ticks per quater note)
-        outfile.write(
-            struct.pack(">H", resolution)
-        )
+        rslt_li.append(struct.pack(">H", resolution))
 
     except Exception as ex:
         log.critical(ex)
         raise ex
+    btye_li = b''.join(rslt_li)
 
-    return outfile
+    return btye_li
 
 
 def parse_track_header(infile):
@@ -125,7 +116,6 @@ def parse_track_header(infile):
       - infile: a file like object pointed at the first byte after the header
       - track_len: in bytes, in addition to the 4 for the declaration and the 4 for this number
     '''
-
     try:
         # First four bytes are MIDI track declaration
         midi_track_declaration = infile.read(4)
