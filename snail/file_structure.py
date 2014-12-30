@@ -10,7 +10,7 @@ log = Logger('snail')
 DEFAULT_MIDI_HEADER_LEN = 14
 
 
-def parse_header(infile):
+def parse_file_header(infile):
     '''
     infile: a file like object
 
@@ -59,3 +59,24 @@ def parse_header(infile):
         infile.read(header_len + 8 - DEFAULT_MIDI_HEADER_LEN)
 
     return infile, header_len, midi_format, track_ct, resolution
+
+def parse_track_header(infile):
+    '''
+    infile: a file like object
+
+    returns:
+      - infile: a file like object pointed at the first byte after the header
+      - track_len: in bytes, in addition to the 4 for the declaration and the 4 for this number
+    '''
+    # First four bytes are MIDI track declaration
+    midi_track_declaration = infile.read(4)
+    if midi_track_declaration != b'MTrk':
+        err_text = "This is not a midi track - wrong declaration"
+        log.critical(err_text)
+        raise TypeError(err_text)
+
+    # next four bytes are track size in bytes
+    track_len = struct.unpack(">L", infile.read(4))[0]  # always a tuple
+    log.info('remaining track size: {}'.format(track_len))
+
+    return infile, track_len
