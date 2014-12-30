@@ -10,7 +10,7 @@ def read(data):
     NEXTBYTE = 1
     value = 0
     while NEXTBYTE:
-        chr = ord(data.next())
+        chr = ord(next(data))
         # is the hi-bit set?
         if not (chr & 0x80):
             # no next BYTE
