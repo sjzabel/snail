@@ -142,9 +142,13 @@ def build_track_header(track_len):
 
 def get_track_iter(infile):
     '''
+Parse track header and return an iterator for the remaining len
+This is a convient way of knowing that you have read the entire track.
+
 :param infile: a file like object; just before a track
 
 returns:
     track_iter: an :class:`iterator` for the remaining bytes in a track
     '''
-    pass
+    track_len = parse_track_header(infile)
+    return iter(infile.read(track_len))

@@ -47,3 +47,17 @@ class TestFileStructureTrackHeader(unittest.TestCase):
 
         header_len = file_structure.parse_track_header(infile)
         self.assertEqual(header_len, 4294967295)
+
+    def test_get_track_iter(self):
+        byte_li = [
+            b'MTrk',
+            struct.pack('>L', 5),
+            b'test' * 50,
+        ]
+        infile = io.BytesIO(b''.join(byte_li))
+
+        track_iter = file_structure.get_track_iter(infile)
+        self.assertEqual('testt', ''.join([chr(b) for b in track_iter]))
+        self.assertEqual(8 + 5, infile.tell())  # don't forget about the header bytes
+
+
