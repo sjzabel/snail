@@ -12,13 +12,13 @@ DEFAULT_MIDI_HEADER_LEN = 14
 
 def parse_file_header(infile):
     '''
-Receives a file like object; parses and returns parts of the midi header
+:param infile: Receives a file like object; parses and returns parts of the midi header
 
-:param infile: a file like object pointed at the first byte after the header
-:param header_len: in bytes, in addition to the 4 for the declaration and the 4 for this number
-:param midi_format: the midi format (0, 1 or 2) http://en.wikipedia.org/wiki/MIDI#Standard_MIDI_files
-:param track_count: the number of tracks specified by the header
-:param resolution: the PPQN http://en.wikipedia.org/wiki/Pulses_per_quarter_note
+returns:
+header_len: in bytes, in addition to the 4 for the declaration and the 4 for this number
+midi_format: the midi format (0, 1 or 2) http://en.wikipedia.org/wiki/MIDI#Standard_MIDI_files
+track_count: the number of tracks specified by the header
+resolution: the PPQN http://en.wikipedia.org/wiki/Pulses_per_quarter_note
     '''
     try:
         # First four bytes are MIDI header declaration
@@ -61,7 +61,7 @@ Receives a file like object; parses and returns parts of the midi header
         log.critical(ex)
         raise ex
 
-    return infile, header_len, midi_format, track_ct, resolution
+    return header_len, midi_format, track_ct, resolution
 
 
 def build_file_header(midi_format, track_ct, resolution):
@@ -111,7 +111,6 @@ def parse_track_header(infile):
 :param infile: a file like object
 
 returns:
-infile: a file like object pointed at the first byte after the header
 track_len: in bytes, in addition to the 4 for the declaration and the 4 for this number
     '''
     try:
@@ -130,7 +129,7 @@ track_len: in bytes, in addition to the 4 for the declaration and the 4 for this
         log.critical(ex)
         raise ex
 
-    return infile, track_len
+    return track_len
 
 def build_track_header(track_len):
     '''
@@ -146,7 +145,6 @@ def get_track_iter(infile):
 :param infile: a file like object; just before a track
 
 returns:
-    infile: a file like object
     track_iter: an :class:`iterator` for the remaining bytes in a track
     '''
     pass

@@ -42,7 +42,7 @@ class TestFileStructureFileHeader(unittest.TestCase):
         ]
         infile = io.BytesIO(b''.join(byte_li))
 
-        infile, header_len, midi_format, track_ct, resolution = file_structure.parse_file_header(infile)
+        header_len, midi_format, track_ct, resolution = file_structure.parse_file_header(infile)
         self.assertEqual(header_len, 6)
 
     def test_parse_file_header_returns_midi_format_error(self):
@@ -70,7 +70,7 @@ class TestFileStructureFileHeader(unittest.TestCase):
         ]
         infile = io.BytesIO(b''.join(byte_li))
 
-        infile, header_len, midi_format, track_ct, resolution = file_structure.parse_file_header(infile)
+        header_len, midi_format, track_ct, resolution = file_structure.parse_file_header(infile)
         self.assertEqual(midi_format, 1)
 
     def test_parse_file_header_returns_file_obj_correctly_for_default_len(self):
@@ -83,7 +83,7 @@ class TestFileStructureFileHeader(unittest.TestCase):
         ]
         infile = io.BytesIO(b''.join(byte_li))
 
-        infile, header_len, midi_format, track_ct, resolution = file_structure.parse_file_header(infile)
+        header_len, midi_format, track_ct, resolution = file_structure.parse_file_header(infile)
         self.assertEqual(infile.tell(), file_structure.DEFAULT_MIDI_HEADER_LEN)
 
     def test_parse_file_header_returns_file_obj_correctly_for_padded_len(self):
@@ -97,7 +97,7 @@ class TestFileStructureFileHeader(unittest.TestCase):
         ]
         infile = io.BytesIO(b''.join(byte_li))
 
-        infile, header_len, midi_format, track_ct, resolution = file_structure.parse_file_header(infile)
+        header_len, midi_format, track_ct, resolution = file_structure.parse_file_header(infile)
         self.assertEqual(infile.tell(), file_structure.DEFAULT_MIDI_HEADER_LEN + 10)
 
     def test_parse_file_header_returns_track_ct_correctly(self):
@@ -110,7 +110,7 @@ class TestFileStructureFileHeader(unittest.TestCase):
         ]
         infile = io.BytesIO(b''.join(byte_li))
 
-        infile, header_len, midi_format, track_ct, resolution = file_structure.parse_file_header(infile)
+        header_len, midi_format, track_ct, resolution = file_structure.parse_file_header(infile)
         self.assertEqual(track_ct, 4)
 
     def test_parse_file_header_returns_resolution_correctly(self):
@@ -123,7 +123,7 @@ class TestFileStructureFileHeader(unittest.TestCase):
         ]
         infile = io.BytesIO(b''.join(byte_li))
 
-        infile, header_len, midi_format, track_ct, resolution = file_structure.parse_file_header(infile)
+        header_len, midi_format, track_ct, resolution = file_structure.parse_file_header(infile)
         self.assertEqual(resolution, 65535)
 
     def test_build_file_header_returns_everything_correctly(self):
@@ -131,7 +131,7 @@ class TestFileStructureFileHeader(unittest.TestCase):
             file_structure.build_file_header(0, 1, 2)
         )
 
-        infile, header_len, midi_format, track_ct, resolution = file_structure.parse_file_header(infile)
+        header_len, midi_format, track_ct, resolution = file_structure.parse_file_header(infile)
 
         self.assertEqual(infile.tell(), file_structure.DEFAULT_MIDI_HEADER_LEN)
         self.assertEqual(midi_format, 0)
