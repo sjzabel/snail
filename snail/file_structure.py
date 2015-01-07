@@ -12,14 +12,13 @@ DEFAULT_MIDI_HEADER_LEN = 14
 
 def parse_file_header(infile):
     '''
-    infile: a file like object
+Receives a file like object; parses and returns parts of the midi header
 
-    returns:
-      - infile: a file like object pointed at the first byte after the header
-      - header_len: in bytes, in addition to the 4 for the declaration and the 4 for this number
-      - midi_format: the midi format (0, 1 or 2) http://en.wikipedia.org/wiki/MIDI#Standard_MIDI_files
-      - track_count: the number of tracks specified by the header
-      - resolution: the PPQN http://en.wikipedia.org/wiki/Pulses_per_quarter_note
+:param infile: a file like object pointed at the first byte after the header
+:param header_len: in bytes, in addition to the 4 for the declaration and the 4 for this number
+:param midi_format: the midi format (0, 1 or 2) http://en.wikipedia.org/wiki/MIDI#Standard_MIDI_files
+:param track_count: the number of tracks specified by the header
+:param resolution: the PPQN http://en.wikipedia.org/wiki/Pulses_per_quarter_note
     '''
     try:
         # First four bytes are MIDI header declaration
@@ -67,14 +66,13 @@ def parse_file_header(infile):
 
 def build_file_header(midi_format, track_ct, resolution):
     '''
-    build_file_header
-    params:
-      - midi_format: the midi format (0, 1 or 2) http://en.wikipedia.org/wiki/MIDI#Standard_MIDI_files
-      - track_count: the number of tracks specified by the header
-      - resolution: the PPQN http://en.wikipedia.org/wiki/Pulses_per_quarter_note
+Receives info regarding a midi file
 
-    returns:
-      - a byte array len 14
+:param midi_format: the midi format (0, 1 or 2) http://en.wikipedia.org/wiki/MIDI#Standard_MIDI_files
+:param track_count: the number of tracks specified by the header
+:param resolution: the PPQN http://en.wikipedia.org/wiki/Pulses_per_quarter_note
+
+:returns a :class:`bytearray` len 14
     '''
     try:
         rslt_li = []
@@ -110,11 +108,11 @@ def build_file_header(midi_format, track_ct, resolution):
 
 def parse_track_header(infile):
     '''
-    infile: a file like object
+:param infile: a file like object
 
-    returns:
-      - infile: a file like object pointed at the first byte after the header
-      - track_len: in bytes, in addition to the 4 for the declaration and the 4 for this number
+returns:
+infile: a file like object pointed at the first byte after the header
+track_len: in bytes, in addition to the 4 for the declaration and the 4 for this number
     '''
     try:
         # First four bytes are MIDI track declaration
@@ -136,9 +134,19 @@ def parse_track_header(infile):
 
 def build_track_header(track_len):
     '''
-    track_len: in bytes, in addition to the 4 for the declaration and the 4 for this number
+:param track_len: in bytes, in addition to the 4 for the declaration and the 4 for this number
 
-    returns:
-      a byte array 8 bytes long
+:returns: a :class:`bytearray` 8 bytes long
     '''
     return b''.join([b'MTrk', struct.pack('>L', track_len)])
+
+
+def get_track_iter(infile):
+    '''
+:param infile: a file like object; just before a track
+
+returns:
+    infile: a file like object
+    track_iter: an :class:`iterator` for the remaining bytes in a track
+    '''
+    pass
