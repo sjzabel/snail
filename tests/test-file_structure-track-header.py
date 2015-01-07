@@ -59,5 +59,3 @@ class TestFileStructureTrackHeader(unittest.TestCase):
         track_iter = file_structure.get_track_iter(infile)
         self.assertEqual('testt', ''.join([chr(b) for b in track_iter]))
         self.assertEqual(8 + 5, infile.tell())  # don't forget about the header bytes
-
-

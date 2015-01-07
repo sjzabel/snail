@@ -6,15 +6,28 @@ python >= 3.4
 
 http://en.wikipedia.org/wiki/Variable-length_quantity
 '''
-def read(data):
-    NEXTBYTE = 1
-    value = 0
-    while NEXTBYTE:
-        chr = next(data)
+def read(byte_iter):
+    '''
+    Parses a VLQ
+
+    :param byte_iter: an iterator over a byte array
+
+    returns:
+        quantity (a potentially large number)
+
+    raises:
+        StopIteration if the byte_iter has no more to read
+    '''
+
+    has_next_byte = True
+    value = None
+    while has_next_byte:
+        chr = next(byte_iter)
+
         # is the hi-bit set?
         if not (chr & 0x80):
             # no next BYTE
-            NEXTBYTE = 0
+            has_next_byte = False
         # mask out the 8th bit
         chr = chr & 0x7f
         # shift last value up 7 bits
