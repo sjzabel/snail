@@ -1,4 +1,4 @@
-from snail import file_structure
+from snail import track
 from unittest.mock import MagicMock
 import io
 import logbook
@@ -22,7 +22,7 @@ class TestFileStructureTrackHeader(unittest.TestCase):
         infile = io.BytesIO(b'NOTMTrk')
 
         with self.assertRaises(TypeError):
-            file_structure.parse_track_header(infile)
+            track.parse_track_header(infile)
 
         self.assertTrue(self.log_handler.has_critical(re.compile('wrong declaration'), channel='snail'))
 
@@ -39,13 +39,13 @@ class TestFileStructureTrackHeader(unittest.TestCase):
         ]
         infile = io.BytesIO(b''.join(byte_li))
 
-        header_len = file_structure.parse_track_header(infile)
+        header_len = track.parse_track_header(infile)
         self.assertEqual(header_len, 4294967295)
 
     def test_build_track_header_correctly(self):
-        infile = io.BytesIO(file_structure.build_track_header(4294967295))
+        infile = io.BytesIO(track.build_track_header(4294967295))
 
-        header_len = file_structure.parse_track_header(infile)
+        header_len = track.parse_track_header(infile)
         self.assertEqual(header_len, 4294967295)
 
     def test_get_track_iter(self):
@@ -56,6 +56,6 @@ class TestFileStructureTrackHeader(unittest.TestCase):
         ]
         infile = io.BytesIO(b''.join(byte_li))
 
-        track_iter = file_structure.get_track_iter(infile)
+        track_iter = track.get_track_iter(infile)
         self.assertEqual('testt', ''.join([chr(b) for b in track_iter]))
         self.assertEqual(8 + 5, infile.tell())  # don't forget about the header bytes

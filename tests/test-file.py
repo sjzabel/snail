@@ -1,4 +1,4 @@
-from snail import file_structure
+from snail import file as midi_file
 from unittest.mock import MagicMock
 import io
 import logbook
@@ -22,7 +22,7 @@ class TestFileStructureFileHeader(unittest.TestCase):
         infile = io.BytesIO(b'NOTMThd')
 
         with self.assertRaises(TypeError):
-            file_structure.parse_file_header(infile)
+            midi_file.parse_file_header(infile)
 
         self.assertTrue(self.log_handler.has_critical(re.compile('wrong declaration'), channel='snail'))
 
@@ -42,7 +42,7 @@ class TestFileStructureFileHeader(unittest.TestCase):
         ]
         infile = io.BytesIO(b''.join(byte_li))
 
-        header_len, midi_format, track_ct, resolution = file_structure.parse_file_header(infile)
+        header_len, midi_format, track_ct, resolution = midi_file.parse_file_header(infile)
         self.assertEqual(header_len, 6)
 
     def test_parse_file_header_returns_midi_format_error(self):
@@ -56,7 +56,7 @@ class TestFileStructureFileHeader(unittest.TestCase):
         infile = io.BytesIO(b''.join(byte_li))
 
         with self.assertRaises(TypeError):
-            file_structure.parse_file_header(infile)
+            midi_file.parse_file_header(infile)
 
         self.assertTrue(self.log_handler.has_critical(re.compile('incorrect midi format'), channel='snail'))
 
@@ -70,7 +70,7 @@ class TestFileStructureFileHeader(unittest.TestCase):
         ]
         infile = io.BytesIO(b''.join(byte_li))
 
-        header_len, midi_format, track_ct, resolution = file_structure.parse_file_header(infile)
+        header_len, midi_format, track_ct, resolution = midi_file.parse_file_header(infile)
         self.assertEqual(midi_format, 1)
 
     def test_parse_file_header_returns_file_obj_correctly_for_default_len(self):
@@ -83,8 +83,8 @@ class TestFileStructureFileHeader(unittest.TestCase):
         ]
         infile = io.BytesIO(b''.join(byte_li))
 
-        header_len, midi_format, track_ct, resolution = file_structure.parse_file_header(infile)
-        self.assertEqual(infile.tell(), file_structure.DEFAULT_MIDI_HEADER_LEN)
+        header_len, midi_format, track_ct, resolution = midi_file.parse_file_header(infile)
+        self.assertEqual(infile.tell(), midi_file.DEFAULT_MIDI_HEADER_LEN)
 
     def test_parse_file_header_returns_file_obj_correctly_for_padded_len(self):
         byte_li = [
@@ -97,8 +97,8 @@ class TestFileStructureFileHeader(unittest.TestCase):
         ]
         infile = io.BytesIO(b''.join(byte_li))
 
-        header_len, midi_format, track_ct, resolution = file_structure.parse_file_header(infile)
-        self.assertEqual(infile.tell(), file_structure.DEFAULT_MIDI_HEADER_LEN + 10)
+        header_len, midi_format, track_ct, resolution = midi_file.parse_file_header(infile)
+        self.assertEqual(infile.tell(), midi_file.DEFAULT_MIDI_HEADER_LEN + 10)
 
     def test_parse_file_header_returns_track_ct_correctly(self):
         byte_li = [
@@ -110,7 +110,7 @@ class TestFileStructureFileHeader(unittest.TestCase):
         ]
         infile = io.BytesIO(b''.join(byte_li))
 
-        header_len, midi_format, track_ct, resolution = file_structure.parse_file_header(infile)
+        header_len, midi_format, track_ct, resolution = midi_file.parse_file_header(infile)
         self.assertEqual(track_ct, 4)
 
     def test_parse_file_header_returns_resolution_correctly(self):
@@ -123,23 +123,23 @@ class TestFileStructureFileHeader(unittest.TestCase):
         ]
         infile = io.BytesIO(b''.join(byte_li))
 
-        header_len, midi_format, track_ct, resolution = file_structure.parse_file_header(infile)
+        header_len, midi_format, track_ct, resolution = midi_file.parse_file_header(infile)
         self.assertEqual(resolution, 65535)
 
     def test_build_file_header_returns_everything_correctly(self):
         infile = io.BytesIO(
-            file_structure.build_file_header(0, 1, 2)
+            midi_file.build_file_header(0, 1, 2)
         )
 
-        header_len, midi_format, track_ct, resolution = file_structure.parse_file_header(infile)
+        header_len, midi_format, track_ct, resolution = midi_file.parse_file_header(infile)
 
-        self.assertEqual(infile.tell(), file_structure.DEFAULT_MIDI_HEADER_LEN)
+        self.assertEqual(infile.tell(), midi_file.DEFAULT_MIDI_HEADER_LEN)
         self.assertEqual(midi_format, 0)
         self.assertEqual(track_ct, 1)
         self.assertEqual(resolution, 2)
 
     def test_build_file_header_returns_midi_format_error(self):
         with self.assertRaises(TypeError):
-            file_structure.build_file_header(5, 1, 1)
+            midi_file.build_file_header(5, 1, 1)
 
         self.assertTrue(self.log_handler.has_critical(re.compile('not a valid midi format'), channel='snail'))
