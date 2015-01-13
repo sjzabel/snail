@@ -1,5 +1,5 @@
 # Snail
-![Build
+[![Build
 Status](https://travis-ci.org/sjzabel/snail.svg?branch=master)](https://travis-ci.org/sjzabel/snail)
 
 Another Midi framework (because we need another one !!1!)
