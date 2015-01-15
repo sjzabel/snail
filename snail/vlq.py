@@ -1,11 +1,18 @@
-'''
-Utilities to handle Variable Length Quantity midi data
+"""
+File: vlq.py
+Author: Stephen J. Zabel
+Email: sjzabel@gmail.com
+Github: https://github.com/sjzabel
+Description: Utilities to handle Variable Length Quantity midi data
 
 Heavily borrowed from python-midi's midi.util class and tested for
 python >= 3.4
 
 http://en.wikipedia.org/wiki/Variable-length_quantity
-'''
+"""
+
+
+
 def read(byte_iter):
     '''
     Parses a VLQ
@@ -22,36 +29,36 @@ def read(byte_iter):
     has_next_byte = True
     value = None
     while has_next_byte:
-        chr = next(byte_iter)
+        char = next(byte_iter)
 
         # is the hi-bit set?
-        if not (chr & 0x80):
+        if not (char & 0x80):
             # no next BYTE
             has_next_byte = False
         # mask out the 8th bit
-        chr = chr & 0x7f
+        char = char & 0x7f
         # shift last value up 7 bits
         value = value << 7
         # add new value
-        value += chr
+        value += char
     return value
 
 def write(value):
-    chr1 = chr(value & 0x7F)
+    char1 = chr(value & 0x7F)
     value >>= 7
     if value:
-        chr2 = chr((value & 0x7F) | 0x80)
+        char2 = chr((value & 0x7F) | 0x80)
         value >>= 7
         if value:
-            chr3 = chr((value & 0x7F) | 0x80)
+            char3 = chr((value & 0x7F) | 0x80)
             value >>= 7
             if value:
-                chr4 = chr((value & 0x7F) | 0x80)
-                res = chr4 + chr3 + chr2 + chr1
+                char4 = chr((value & 0x7F) | 0x80)
+                res = char4 + char3 + char2 + char1
             else:
-                res = chr3 + chr2 + chr1
+                res = char3 + char2 + char1
         else:
-            res = chr2 + chr1
+            res = char2 + char1
     else:
-        res = chr1
+        res = char1
     return res
